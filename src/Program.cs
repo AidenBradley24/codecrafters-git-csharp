@@ -32,7 +32,8 @@ if (command == "init")
 }
 else if (command == "cat-file")
 {
-    var blob = new Blob(plumb!);
+    if (plumb == null) throw new Exception("no plumb arg!");
+    var blob = new Blob(plumb);
     Console.WriteLine(blob.Read());
 }
 else
