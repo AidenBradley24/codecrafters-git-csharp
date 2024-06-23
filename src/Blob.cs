@@ -15,9 +15,12 @@ namespace codecrafters_git.src
         {
             FileInfo info = new(Path.Combine(".git", "objects", hash[..2], hash[2..]));
             using var fs = info.Open(FileMode.Open);
-            using var zl = new ZLibStream(fs, CompressionMode.Decompress);
-            zl.Seek("blob ".Length, SeekOrigin.Begin);
-            using var br = new BinaryReader(zl);
+            using var ms = new MemoryStream();
+            using var zl = new ZLibStream(ms, CompressionMode.Decompress);
+            fs.CopyTo(zl);
+            zl.Flush();
+            ms.Seek("blob ".Length, SeekOrigin.Begin);
+            using var br = new BinaryReader(ms);
             List<byte> bees = [];
             while (true)
             {
