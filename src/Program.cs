@@ -11,7 +11,7 @@ if (args.Length < 1)
 string? plumb = null;
 for (int i = 0; i < args.Length; i++)
 {
-    if (args[i] == "--p")
+    if (args[i] == "-p")
     {
         plumb = args[++i];
     }
