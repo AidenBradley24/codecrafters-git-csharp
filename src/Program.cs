@@ -17,9 +17,6 @@ for (int i = 0; i < args.Length; i++)
     }
 }
 
-// You can use print statements as follows for debugging, they'll be visible when running tests.
-Console.WriteLine("Logs from your program will appear here!");
-
 string command = args[0];
 
 if (command == "init")
