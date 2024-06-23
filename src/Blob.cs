@@ -37,6 +37,10 @@ namespace codecrafters_git.src
 
         private void Write(Stream source)
         {
+            if (Target.Directory!.Exists)
+            {
+                Target.Directory!.Create();
+            }
             using var fs = Target.OpenWrite();
             using var zl = new ZLibStream(fs, CompressionMode.Compress);
             source.CopyTo(zl);
