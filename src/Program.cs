@@ -9,12 +9,17 @@ if (args.Length < 1)
     return;
 }
 
-string? plumb = null;
+string? p = null;
+string? w = null;
 for (int i = 0; i < args.Length; i++)
 {
     if (args[i] == "-p")
     {
-        plumb = args[++i];
+        p = args[++i];
+    }
+    else if (args[i] == "-w")
+    {
+        w = args[++i];
     }
 }
 
@@ -30,9 +35,15 @@ if (command == "init")
 }
 else if (command == "cat-file")
 {
-    if (plumb == null) throw new Exception("no plumb arg!");
-    var blob = new Blob(plumb);
+    if (p == null) throw new Exception("no plumb arg!");
+    var blob = Blob.Open(p);
     Console.Write(Encoding.ASCII.GetString(blob.Read()));
+}
+else if (command == "hash-object")
+{
+    if (w == null) throw new Exception("no plumb arg!");
+    var blob = Blob.Create(new FileInfo(w));
+    Console.Write(blob.Hash);
 }
 else
 {
