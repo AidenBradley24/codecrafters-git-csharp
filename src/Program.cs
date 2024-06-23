@@ -1,6 +1,7 @@
 using codecrafters_git.src;
 using System;
 using System.IO;
+using System.Text;
 
 if (args.Length < 1)
 {
@@ -31,7 +32,7 @@ else if (command == "cat-file")
 {
     if (plumb == null) throw new Exception("no plumb arg!");
     var blob = new Blob(plumb);
-    Console.WriteLine(blob.Read());
+    Console.WriteLine(Encoding.ASCII.GetString(blob.Read()));
 }
 else
 {
