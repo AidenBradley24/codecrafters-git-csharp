@@ -42,8 +42,8 @@ namespace codecrafters_git.src
                 Target.Directory!.Create();
             }
             using var fs = Target.OpenWrite();
-            fs.Write(Encoding.ASCII.GetBytes($"blob {source.Length}\0"));
             using var zl = new ZLibStream(fs, CompressionMode.Compress);
+            zl.Write(Encoding.ASCII.GetBytes($"blob {source.Length}\0"));
             source.CopyTo(zl);
         }
 
