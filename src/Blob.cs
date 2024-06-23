@@ -22,6 +22,7 @@ namespace codecrafters_git.src
         {
             using var fs = source.OpenRead();
             using MemoryStream ms = new();
+            ms.Write(Encoding.ASCII.GetBytes($"blob {source.Length}\0"));
             fs.CopyTo(ms);
             string hashHex = BitConverter.ToString(SHA1.HashData(ms.ToArray())).Replace("-", "").ToLower();
             ms.Position = 0;
@@ -43,7 +44,6 @@ namespace codecrafters_git.src
             }
             using var fs = Target.OpenWrite();
             using var zl = new ZLibStream(fs, CompressionMode.Compress);
-            zl.Write(Encoding.ASCII.GetBytes($"blob {source.Length}\0"));
             source.CopyTo(zl);
         }
 
