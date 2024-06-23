@@ -32,7 +32,7 @@ else if (command == "cat-file")
 {
     if (plumb == null) throw new Exception("no plumb arg!");
     var blob = new Blob(plumb);
-    Console.WriteLine(Encoding.ASCII.GetString(blob.Read()));
+    Console.WriteLine(Encoding.ASCII.GetString(blob.Read())[..^1]);
 }
 else
 {
