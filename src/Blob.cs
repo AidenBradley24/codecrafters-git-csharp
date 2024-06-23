@@ -40,6 +40,8 @@ namespace codecrafters_git.src
             if (Target.Directory!.Exists)
             {
                 Target.Directory!.Create();
+                Console.WriteLine(Target.FullName);
+                Console.WriteLine(Target.Name);
             }
             using var fs = Target.OpenWrite();
             using var zl = new ZLibStream(fs, CompressionMode.Compress);
