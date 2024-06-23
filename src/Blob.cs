@@ -23,7 +23,7 @@ namespace codecrafters_git.src
             using var fs = source.OpenRead();
             using MemoryStream ms = new();
             fs.CopyTo(ms);
-            string hashHex = BitConverter.ToString(SHA1.HashData(ms.ToArray()));
+            string hashHex = BitConverter.ToString(SHA1.HashData(ms.ToArray())).Replace("-", "").ToLower();
             ms.Position = 0;
             Blob blob = new(hashHex);
             blob.Write(ms);
