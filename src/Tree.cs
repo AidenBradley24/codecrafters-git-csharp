@@ -35,7 +35,7 @@ namespace codecrafters_git.src
                 string mode = ReadStringUntilByte(br, 0x20); // until space
                 string name = ReadStringUntilByte(br, 0);
                 byte[] sha = br.ReadBytes(20);
-                length -= (mode.Length + name.Length + sha.Length);
+                length -= (mode.Length + name.Length + sha.Length + 2);
                 tree.entries.Add(new Entry(sha, name, mode));
             }
 
