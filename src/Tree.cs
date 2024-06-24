@@ -30,14 +30,13 @@ namespace codecrafters_git.src
             using var br = new BinaryReader(ms);
             int length = int.Parse(ReadStringUntilByte(br, 0));
 
+            long prevPos = ms.Position;
+            Console.WriteLine(Encoding.ASCII.GetString(br.ReadBytes(length)));
+            ms.Position = prevPos;
+
             while (length > 0)
             {
                 string mode = Encoding.ASCII.GetString(br.ReadBytes(6));
-                ms.Seek(-7, SeekOrigin.Current);
-                Console.WriteLine(Encoding.ASCII.GetString(br.ReadBytes(1)));
-                ms.Seek(5, SeekOrigin.Current);
-                Console.WriteLine($"\"{mode}\"");
-                Console.WriteLine(mode.Length);
                 ms.Position++;
                 string name = ReadStringUntilByte(br, 0);
                 byte[] sha = br.ReadBytes(20);
