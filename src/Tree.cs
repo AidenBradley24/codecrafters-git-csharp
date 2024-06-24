@@ -33,6 +33,9 @@ namespace codecrafters_git.src
             while (length > 0)
             {
                 string mode = Encoding.ASCII.GetString(br.ReadBytes(6));
+                ms.Seek(-6, SeekOrigin.Current);
+                Console.WriteLine(br.ReadByte());
+                ms.Seek(5, SeekOrigin.Current);
                 Console.WriteLine($"\"{mode}\"");
                 Console.WriteLine(mode.Length);
                 ms.Position++;
