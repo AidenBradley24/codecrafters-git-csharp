@@ -17,17 +17,25 @@ namespace codecrafters_git.src
         public static Tree Create(DirectoryInfo sourceDir)
         {
             List<Entry> entries = [];
-            foreach (var dir in sourceDir.EnumerateDirectories().OrderBy(d => d.Name))
-            {
-                if (dir.Name == ".git") continue;
-                Tree child = Create(dir);
-                entries.Add(new(child.HashBytes, dir.Name, "40000"));
-            }
 
-            foreach (var file in sourceDir.EnumerateFiles().OrderBy(f => f.Name))
+            // both directories and files are sorted together
+            List<(string name, object val)> raws = [];
+            raws.AddRange(sourceDir.EnumerateDirectories().Select(d => (d.Name, d as object)));
+            raws.AddRange(sourceDir.EnumerateFiles().Select(f => (f.Name, f as object)));
+
+            foreach (var (name, val) in raws.OrderBy(r => r.name))
             {
-                var blob = Blob.Create(file);
-                entries.Add(new(blob.HashBytes, file.Name, "100644"));
+                if (val is DirectoryInfo dir)
+                {
+                    if (name == ".git") continue;
+                    Tree child = Create(dir);
+                    entries.Add(new(child.HashBytes, name, "40000"));
+                }
+                else if (val is FileInfo file)
+                {
+                    var blob = Blob.Create(file);
+                    entries.Add(new(blob.HashBytes, name, "100644"));
+                }
             }
 
             using var ms = new MemoryStream();
