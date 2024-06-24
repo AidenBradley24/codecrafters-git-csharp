@@ -56,7 +56,7 @@ else if (command == "ls-tree")
 }
 else if (command == "write-tree")
 {
-    var tree = Tree.Create(Directory.CreateDirectory(""));
+    var tree = Tree.Create(Directory.CreateDirectory("."));
     Console.Write(tree.Hash);
 }
 else
