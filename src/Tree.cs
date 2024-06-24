@@ -19,6 +19,7 @@ namespace codecrafters_git.src
             List<Entry> entries = [];
             foreach (var dir in sourceDir.EnumerateDirectories())
             {
+                if (dir.Name == ".git") continue;
                 Tree child = Create(dir);
                 entries.Add(new(child.HashBytes, dir.Name, "40000"));
             }
