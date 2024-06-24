@@ -33,6 +33,7 @@ namespace codecrafters_git.src
             while (length > 0)
             {
                 string mode = Encoding.ASCII.GetString(br.ReadBytes(6));
+                Console.WriteLine(mode);
                 ms.Position++;
                 string name = ReadStringUntilByte(br, 0);
                 byte[] sha = br.ReadBytes(20);
