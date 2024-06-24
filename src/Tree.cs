@@ -20,7 +20,7 @@ namespace codecrafters_git.src
             foreach (var dir in sourceDir.EnumerateDirectories())
             {
                 Tree child = Create(dir);
-                entries.Add(new(child.HashBytes, sourceDir.Name, "40000"));
+                entries.Add(new(child.HashBytes, dir.Name, "40000"));
             }
 
             foreach (var file in sourceDir.EnumerateFiles())
