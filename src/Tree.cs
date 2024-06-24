@@ -17,14 +17,14 @@ namespace codecrafters_git.src
         public static Tree Create(DirectoryInfo sourceDir)
         {
             List<Entry> entries = [];
-            foreach (var dir in sourceDir.EnumerateDirectories())
+            foreach (var dir in sourceDir.EnumerateDirectories().OrderBy(d => d.Name))
             {
                 if (dir.Name == ".git") continue;
                 Tree child = Create(dir);
                 entries.Add(new(child.HashBytes, dir.Name, "40000"));
             }
 
-            foreach (var file in sourceDir.EnumerateFiles())
+            foreach (var file in sourceDir.EnumerateFiles().OrderBy(f => f.Name))
             {
                 var blob = Blob.Create(file);
                 entries.Add(new(blob.HashBytes, file.Name, "100644"));
