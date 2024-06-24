@@ -30,15 +30,9 @@ namespace codecrafters_git.src
             using var br = new BinaryReader(ms);
             int length = int.Parse(ReadStringUntilByte(br, 0));
 
-            long prevPos = ms.Position;
-            ms.Position += "100644 dooby ".Length + 19;
-            Console.WriteLine(Encoding.ASCII.GetString(br.ReadBytes(20)));
-            ms.Position = prevPos;
-
             while (length > 0)
             {
-                string mode = Encoding.ASCII.GetString(br.ReadBytes(6));
-                ms.Position++;
+                string mode = ReadStringUntilByte(br, 0x20); // until space
                 string name = ReadStringUntilByte(br, 0);
                 byte[] sha = br.ReadBytes(20);
                 length -= (mode.Length + name.Length + sha.Length);
