@@ -11,7 +11,7 @@ namespace codecrafters_git.src
     {
         record Entry(byte[] Hash, string Name, string Mode);
 
-        private List<Entry> entries;
+        private readonly List<Entry> entries;
         private Tree(string hash) : base(hash)
         {
             entries = [];
@@ -33,7 +33,6 @@ namespace codecrafters_git.src
             while (length > 0)
             {
                 string mode = Encoding.ASCII.GetString(br.ReadBytes(6));
-                ms.Position++;
                 string name = ReadStringUntilByte(br, 0);
                 byte[] sha = br.ReadBytes(20);
                 length -= (mode.Length + name.Length + 22);
