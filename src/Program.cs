@@ -10,6 +10,7 @@ if (args.Length < 1)
 string? p = null;
 string? w = null;
 bool nameOnly = false;
+string? m = null;
 for (int i = 0; i < args.Length; i++)
 {
     if (args[i] == "-p")
@@ -23,6 +24,10 @@ for (int i = 0; i < args.Length; i++)
     else if (args[i] == "--name-only")
     {
         nameOnly = true;
+    }
+    else if (args[i] == "-m")
+    {
+        m = args[++i];
     }
 }
 
@@ -58,6 +63,12 @@ else if (command == "write-tree")
 {
     var tree = Tree.Create(Directory.CreateDirectory("."));
     Console.Write(tree.Hash);
+}
+else if (command == "commit-tree")
+{
+    Commit.User user = new("Test User", "test@example.com", DateTime.Now);
+    var commit = Commit.Create(args[1], user, user, m ?? "", p == null ? null : [p]);
+    Console.Write(commit.Hash);
 }
 else
 {
