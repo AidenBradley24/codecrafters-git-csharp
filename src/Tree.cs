@@ -38,7 +38,7 @@ namespace codecrafters_git.src
                 ms.Position++;
                 string name = ReadStringUntilByte(br, 0);
                 byte[] sha = br.ReadBytes(20);
-                length -= mode.Length - 1 - name.Length - 20;
+                length -= (mode.Length + 1 + name.Length + 20);
                 tree.entries.Add(new Entry(sha, name, mode));
             }
 
