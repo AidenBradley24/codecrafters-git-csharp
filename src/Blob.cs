@@ -8,15 +8,9 @@ using System.Security.Cryptography;
 
 namespace codecrafters_git.src
 {
-    internal class Blob
+    internal class Blob: Object
     {
-        public string Hash { get; }
-        private FileInfo Target { get => new(Path.Combine(".git", "objects", Hash[..2], Hash[2..])); }
-
-        private Blob(string hash)
-        {
-            Hash = hash;
-        }
+        private Blob(string hash) : base(hash) { }
 
         public static Blob Create(FileInfo source)
         {
@@ -24,7 +18,7 @@ namespace codecrafters_git.src
             using MemoryStream ms = new();
             ms.Write(Encoding.ASCII.GetBytes($"blob {source.Length}\0"));
             fs.CopyTo(ms);
-            string hashHex = BitConverter.ToString(SHA1.HashData(ms.ToArray())).Replace("-", "").ToLower();
+            string hashHex = HashHex(SHA1.HashData(ms.ToArray()));
             ms.Position = 0;
             Blob blob = new(hashHex);
             blob.Write(ms);
@@ -56,18 +50,7 @@ namespace codecrafters_git.src
             zl.Flush();
             ms.Seek("blob ".Length, SeekOrigin.Begin);
             using var br = new BinaryReader(ms);
-            List<byte> bees = [];
-            while (true)
-            {
-                byte b = br.ReadByte();
-                if (b == '\0')
-                {
-                    break;
-                }
-                bees.Add(b);
-            }
-
-            int length = int.Parse(bees.ToArray());
+            int length = int.Parse(ReadStringUntilByte(br, 0));
             byte[] content = br.ReadBytes(length);
             return content;
         }

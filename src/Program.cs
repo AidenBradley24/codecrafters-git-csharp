@@ -11,6 +11,7 @@ if (args.Length < 1)
 
 string? p = null;
 string? w = null;
+bool nameOnly = false;
 for (int i = 0; i < args.Length; i++)
 {
     if (args[i] == "-p")
@@ -20,6 +21,10 @@ for (int i = 0; i < args.Length; i++)
     else if (args[i] == "-w")
     {
         w = args[++i];
+    }
+    else if (args[i] == "--name-only")
+    {
+        nameOnly = true;
     }
 }
 
@@ -44,6 +49,12 @@ else if (command == "hash-object")
     if (w == null) throw new Exception("no plumb arg!");
     var blob = Blob.Create(new FileInfo(w));
     Console.Write(blob.Hash);
+}
+else if (command == "ls-tree")
+{
+    string treeSha = args[^1];
+    var tree = Tree.Open(treeSha);
+    Console.Write(tree.ToString(nameOnly));
 }
 else
 {
