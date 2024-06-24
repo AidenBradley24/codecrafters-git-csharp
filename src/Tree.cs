@@ -50,6 +50,7 @@ namespace codecrafters_git.src
                 entries = entries
             };
 
+            ms2.Position = 0;
             tree.Write(ms2);
             return tree;
         }
