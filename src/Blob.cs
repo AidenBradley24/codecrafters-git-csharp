@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using System.IO.Compression;
 using System.Security.Cryptography;
 
@@ -28,17 +24,6 @@ namespace codecrafters_git.src
         public static Blob Open(string hash)
         {
             return new Blob(hash);
-        }
-
-        private void Write(Stream source)
-        {
-            if (!Target.Directory!.Exists)
-            {
-                Target.Directory!.Create();
-            }
-            using var fs = Target.OpenWrite();
-            using var zl = new ZLibStream(fs, CompressionMode.Compress);
-            source.CopyTo(zl);
         }
 
         public byte[] Read()

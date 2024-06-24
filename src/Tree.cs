@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.Linq;
+﻿using System.IO.Compression;
 using System.Text;
-using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace codecrafters_git.src
 {
@@ -11,10 +8,50 @@ namespace codecrafters_git.src
     {
         record Entry(byte[] Hash, string Name, string Mode);
 
-        private readonly List<Entry> entries;
+        private List<Entry> entries;
         private Tree(string hash) : base(hash)
         {
             entries = [];
+        }
+
+        public static Tree Create(DirectoryInfo sourceDir)
+        {
+            List<Entry> entries = [];
+            foreach (var dir in sourceDir.EnumerateDirectories())
+            {
+                Tree child = Create(dir);
+                entries.Add(new(child.HashBytes, sourceDir.Name, "040000"));
+            }
+
+            foreach (var file in sourceDir.EnumerateFiles())
+            {
+                var blob = Blob.Create(file);
+                entries.Add(new(blob.HashBytes, file.Name, "100644"));
+            }
+
+            using var ms = new MemoryStream();
+            foreach (var entry in entries)
+            {
+                ms.Write(Encoding.ASCII.GetBytes($"{entry.Mode} {entry.Name}\0"));
+                ms.Write(entry.Hash);
+            }
+
+            long length = ms.Length;
+            ms.Position = 0;
+            
+            using var ms2 = new MemoryStream();
+            ms2.Write(Encoding.ASCII.GetBytes($"tree {length}\0"));
+            ms.CopyTo(ms2);
+            ms.Dispose();
+            string hashHex = HashHex(SHA1.HashData(ms2.ToArray()));
+
+            Tree tree = new(hashHex)
+            {
+                entries = entries
+            };
+
+            tree.Write(ms2);
+            return tree;
         }
 
         public static Tree Open(string hash)
@@ -53,7 +90,7 @@ namespace codecrafters_git.src
                     sb.Append(' ');
                     string type = entry.Mode switch
                     {
-                        "040000" => "tree",
+                        "040000" or "40000" => "tree",
                         _ => "blob"
                     };
                     sb.Append(type);

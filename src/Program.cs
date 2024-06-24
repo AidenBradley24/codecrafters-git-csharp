@@ -1,6 +1,4 @@
 using codecrafters_git.src;
-using System;
-using System.IO;
 using System.Text;
 
 if (args.Length < 1)
@@ -55,6 +53,11 @@ else if (command == "ls-tree")
     string treeSha = args[^1];
     var tree = Tree.Open(treeSha);
     Console.Write(tree.ToString(nameOnly));
+}
+else if (command == "write-tree")
+{
+    var tree = Tree.Create(Directory.CreateDirectory(""));
+    Console.Write(tree.Hash);
 }
 else
 {
