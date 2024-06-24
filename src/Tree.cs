@@ -31,7 +31,7 @@ namespace codecrafters_git.src
             int length = int.Parse(ReadStringUntilByte(br, 0));
 
             long prevPos = ms.Position;
-            ms.Position += "100644 dooby ".Length + 20;
+            ms.Position += "100644 dooby ".Length + 19;
             Console.WriteLine(Encoding.ASCII.GetString(br.ReadBytes(20)));
             ms.Position = prevPos;
 
