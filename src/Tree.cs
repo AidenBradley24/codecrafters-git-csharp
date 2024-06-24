@@ -33,10 +33,12 @@ namespace codecrafters_git.src
             while (length > 0)
             {
                 string mode = Encoding.ASCII.GetString(br.ReadBytes(6));
+                Console.WriteLine($"\"{mode}\"");
+                Console.WriteLine(mode.Length);
                 ms.Position++;
                 string name = ReadStringUntilByte(br, 0);
                 byte[] sha = br.ReadBytes(20);
-                length -= (mode.Length + name.Length + 22);
+                length -= (mode.Length + name.Length + sha.Length);
                 tree.entries.Add(new Entry(sha, name, mode));
             }
 
