@@ -34,6 +34,7 @@ namespace codecrafters_git.src
             {
                 foreach (var parent in parentHashes)
                 {
+                    Console.WriteLine($"PARENT: \"{parent}\"");
                     ms.Write(Encoding.ASCII.GetBytes("parent "));
                     ms.Write(Encoding.ASCII.GetBytes(parent));
                 }
