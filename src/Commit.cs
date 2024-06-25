@@ -28,14 +28,14 @@ namespace codecrafters_git.src
             using var ms = new MemoryStream();
 
             ms.Write(Encoding.ASCII.GetBytes("tree "));
-            ms.Write(Convert.FromHexString(treeSha));
+            ms.Write(Encoding.ASCII.GetBytes(treeSha));
 
             if (parentHashes != null)
             {
                 foreach (var parent in parentHashes)
                 {
                     ms.Write(Encoding.ASCII.GetBytes("parent "));
-                    ms.Write(Convert.FromHexString(parent));
+                    ms.Write(Encoding.ASCII.GetBytes(parent));
                 }
             }
 
