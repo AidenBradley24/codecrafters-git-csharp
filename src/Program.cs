@@ -66,10 +66,6 @@ else if (command == "write-tree")
 }
 else if (command == "commit-tree")
 {
-    Console.WriteLine($"PARENT: \"{p}\"");
-    Console.WriteLine($"TREE: \"{args[1]}\"");
-    Console.WriteLine($"MESSAGE: \"{m}\"");
-
     Commit.User user = new("Test User", "test@example.com", DateTime.Now);
     var commit = Commit.Create(args[1], user, user, m ?? "", p == null ? null : [p]);
     Console.Write(commit.Hash);
