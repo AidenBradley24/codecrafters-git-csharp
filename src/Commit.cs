@@ -29,6 +29,7 @@ namespace codecrafters_git.src
 
             ms.Write(Encoding.ASCII.GetBytes("tree "));
             ms.Write(Encoding.ASCII.GetBytes(treeSha));
+            ms.Write(Encoding.ASCII.GetBytes("\n"));
 
             if (parentHashes != null)
             {
@@ -36,12 +37,15 @@ namespace codecrafters_git.src
                 {
                     ms.Write(Encoding.ASCII.GetBytes("parent "));
                     ms.Write(Encoding.ASCII.GetBytes(parent));
+                    ms.Write(Encoding.ASCII.GetBytes("\n"));
                 }
             }
 
             WriteUser("author", author, ms);
             WriteUser("committer", committer, ms);
+            ms.Write(Encoding.ASCII.GetBytes("\n"));
             ms.Write(Encoding.ASCII.GetBytes(message));
+            ms.Write(Encoding.ASCII.GetBytes("\n"));
 
             long length = ms.Length;
             ms.Position = 0;
@@ -81,7 +85,8 @@ namespace codecrafters_git.src
 
             ms.Seek("tree ".Length, SeekOrigin.Current);
             commit.tree = Encoding.ASCII.GetString(br.ReadBytes(20));
-            length -= ("tree ".Length + commit.tree.Length);
+            ms.Position++; // skip \n
+            length -= ("tree ".Length + commit.tree.Length + 1);
 
             commit.parents = [];
             while (true)
@@ -90,7 +95,8 @@ namespace codecrafters_git.src
                 if (mode == "parent")
                 {
                     byte[] sha = br.ReadBytes(20);
-                    length -= (sha.Length + "parent ".Length);
+                    ms.Position++; // skip \n
+                    length -= (sha.Length + "parent ".Length + 1);
                     commit.parents.Add(HashHex(sha));
                 }
                 else
@@ -102,12 +108,17 @@ namespace codecrafters_git.src
 
             length -= "author ".Length;
             commit.author = ParseUser(br, ref length);
+            ms.Position++; // skip \n
+            length--;
             ms.Seek("committer ".Length, SeekOrigin.Current);
             length -= "committer ".Length;
             commit.committer = ParseUser(br, ref length);
+            ms.Position++; // skip \n
+            length--;
 
-            commit.message = Encoding.ASCII.GetString(br.ReadBytes(length));
-
+            ms.Position++; // skip \n
+            length--;
+            commit.message = Encoding.ASCII.GetString(br.ReadBytes(length)[..^1]); // trimming last \n
             return new Commit(hash);
         }
 
@@ -144,6 +155,7 @@ namespace codecrafters_git.src
             sb.Append(unixTime);
             sb.Append(' ');
             sb.Append(timeZoneString);
+            sb.Append('\n');
             
             stream.Write(Encoding.ASCII.GetBytes(sb.ToString()));
         }
